@@ -13,7 +13,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>13</version>
+            <version>15</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -34,9 +34,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>11</release>
-                    <source>14</source>
-                    <target>14</target>
+                    <release>16</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -45,6 +43,11 @@
                 <version>0.0.5</version>
                 <configuration>
                     <mainClass>com.imaginationlab.App</mainClass>
+<!--
+ In case JAVA_HOME is not set to 14, running from the Maven Projects window might fail.
+ To avoid it, you can add the correct java command to the javafx-maven-plugin:
+ \<configuration><executable>/path/to/jdk-12/bin/java</executable></configuration>.
+    -->
 
                 </configuration>
             </plugin>
