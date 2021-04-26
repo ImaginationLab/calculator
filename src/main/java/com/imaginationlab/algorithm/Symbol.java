@@ -1,4 +1,4 @@
-package com.nc;
+package com.imaginationlab.algorithm;
 
 import java.math.BigDecimal;
 

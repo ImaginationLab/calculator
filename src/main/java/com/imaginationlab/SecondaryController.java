@@ -1,4 +1,4 @@
-package com.chilam;
+package com.imaginationlab;
 
 import java.io.IOException;
 import javafx.fxml.FXML;

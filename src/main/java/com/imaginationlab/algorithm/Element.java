@@ -1,4 +1,4 @@
-package com.nc;
+package com.imaginationlab.algorithm;
 
 /**
  * 基类 基础元素
