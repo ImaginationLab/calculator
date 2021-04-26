@@ -34,11 +34,11 @@ public class Symbol extends Element{
     public Number Calculation(Number paramA, Number paramB) throws Exception {
         Number result = new Number("0");
         switch (this.symbol) {
-            case '+' : result.num = paramA.num.add(paramB.num);
-            case '-' : result.num = paramA.num.subtract(paramB.num);
-            case '*' : result.num = paramA.num.multiply(paramB.num);
-            case '/' : result.num = paramA.num.divide(paramB.num, 20, BigDecimal.ROUND_HALF_UP);
-            case '^' : result.num = paramA.num.pow(paramB.num.intValue());
+            case '+' : result.num = paramA.num.add(paramB.num);break;
+            case '-' : result.num = paramA.num.subtract(paramB.num);break;
+            case '*' : result.num = paramA.num.multiply(paramB.num);break;
+            case '/' : result.num = paramA.num.divide(paramB.num, 20, BigDecimal.ROUND_HALF_UP);break;
+            case '^' : result.num = paramA.num.pow(paramB.num.intValue());break;
         }
         return result;
     }
