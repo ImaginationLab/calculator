@@ -29,7 +29,7 @@ public class Block extends Element{
         StringBuilder context = new StringBuilder();
         for (Element tempElement:elementList) {
             switch (tempElement.getClass().getSimpleName()){
-                case "Block" :  context.append(this.needFlips?"-":"").append("(").append(tempElement.toString()).append(")");break;
+                case "Block" :  context.append(((Block)tempElement).needFlips?"-":"").append("(").append(tempElement.toString()).append(")");break;
                 case "Symbol" : context.append((tempElement).toString());break;
                 case "Number" : context.append((tempElement).toString());break;
             }

@@ -42,6 +42,7 @@ public class CalculationCore {
         process = BracketsMatching(process);
         // 括号打包为Block
         process = StructBrackets(process);
+        process.toString();
         // 初次分割
         Element[] elements = PriorityCut(process);
         // 递归计算
@@ -120,7 +121,7 @@ public class CalculationCore {
             if(block.needAbsolute){
                 result[4] = new Element();
             }
-            block.elementList = ((Block)block.elementList.get(0)).elementList;
+            block = ((Block)block.elementList.get(0));
         }
         // 如果当前Block需要取反或者取绝对值，进行标识（此处逻辑可以优化）
         if(block.needFlips){
