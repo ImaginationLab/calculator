@@ -9,10 +9,24 @@ public class Number extends Element{
 
     /**
      * 构造方法
-     * @param number
+     * @param number 参数
      */
     public Number(String number){
         this.num = new BigDecimal(number);
+    }
+
+    /**
+     * 取反方法
+     */
+    public void Flips(){
+        this.num = this.num.multiply(new BigDecimal(-1));
+    }
+
+    /**
+     * 取绝对值方法
+     */
+    public void Absolute(){
+        this.num = this.num.abs();
     }
 
     public String toString(){

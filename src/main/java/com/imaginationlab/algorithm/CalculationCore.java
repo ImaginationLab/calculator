@@ -68,6 +68,9 @@ public class CalculationCore {
             Element[] tempParamA = PriorityCut((Block) paramA);
             // 递归调用计算
             trueParamA = RecursionCalculate(tempParamA[0], tempParamA[1], tempParamA[2]);
+            // 取反和取绝对值判断
+            if(tempParamA[3] != null){ trueParamA.Flips();}
+            if(tempParamA[4] != null){ trueParamA.Absolute();}
         }else if("Number".equals(paramA.getClass().getSimpleName())){
             trueParamA = (Number)paramA;
         }else{
@@ -79,6 +82,9 @@ public class CalculationCore {
             Element[] tempParamB = PriorityCut((Block) paramB);
             // 递归调用计算
             trueParamB = RecursionCalculate(tempParamB[0], tempParamB[1], tempParamB[2]);
+            // 取反和取绝对值判断
+            if(tempParamB[3] != null){ trueParamB.Flips();}
+            if(tempParamB[4] != null){ trueParamB.Absolute();}
         }else if("Number".equals(paramB.getClass().getSimpleName())){
             trueParamB = (Number)paramB;
         }else{
@@ -99,10 +105,29 @@ public class CalculationCore {
      */
     public static Element[] PriorityCut(Block block) throws Exception {
         // 结果容器
-        Element[] result = new Element[3];
+        // 0,1,2 为 参数A，运算符，参数B
+        // 3 为 结果取反(不null)
+        // 4 为 结果取绝对值(不null)
+        Element[] result = new Element[5];
+        result[3] = null;
+        result[4] = null;
         // 对于重复无意义的多层Block解包
         while(block.elementList.size() == 1){
+            // 多重包裹内存在需要取反或者取绝对值，进行标识
+            if(block.needFlips){
+                result[3] = new Element();
+            }
+            if(block.needAbsolute){
+                result[4] = new Element();
+            }
             block.elementList = ((Block)block.elementList.get(0)).elementList;
+        }
+        // 如果当前Block需要取反或者取绝对值，进行标识（此处逻辑可以优化）
+        if(block.needFlips){
+            result[3] = new Element();
+        }
+        if(block.needAbsolute){
+            result[4] = new Element();
         }
         // Block内部元素大于等于3进行分割
         if(block.elementList.size() >= 3){
@@ -224,6 +249,32 @@ public class CalculationCore {
             elementsList.add(new Number(tempNumber.toString()));
             tempNumber = new StringBuilder();
         }
+        // 数字前负号处理
+        for(int i=0; i<elementsList.size(); i++){
+            if("Symbol".equals(elementsList.get(i).getClass().getSimpleName())){
+                if(((Symbol)elementsList.get(i)).symbol == '-'){
+                    if(i == 1 && "Number".equals(elementsList.get(i+1).getClass().getSimpleName())){
+                        // 如果负号在开头且后面为Number则Number取反
+                        ((Number)elementsList.get(i+1)).Flips();
+                        ((Symbol)elementsList.get(0)).needDel = true;
+                    }else if("Symbol".equals(elementsList.get(i-1).getClass().getSimpleName()) && "Number".equals(elementsList.get(i+1).getClass().getSimpleName())){
+                        // 如果负号在前面为Symbol且后面为Number则Number取反
+                        ((Number)elementsList.get(i+1)).Flips();
+                        ((Symbol)elementsList.get(i)).needDel = true;
+                    }
+                }
+            }
+        }
+        // 安全删除上一步中判断完的符号
+        Iterator<Element> iterator = elementsList.iterator();
+        while (iterator.hasNext()){
+            Element element = iterator.next();
+            if("Symbol".equals(element.getClass().getSimpleName())) {
+                if(((Symbol)element).needDel){
+                    iterator.remove();
+                }
+            }
+        }
         // 返回Block类型
         return new Block(elementsList);
     }
@@ -266,17 +317,34 @@ public class CalculationCore {
             if(endPos <= startPos){
                 throw new Exception("表达式内括号不匹配！");
             }
+            // 判断括号前是否有负号
+            boolean needFlips = false;
+            if(startPos > 0){
+                if("Symbol".equals(block.elementList.get(startPos-1).getClass().getSimpleName())){
+                    if(((Symbol)block.elementList.get(startPos-1)).symbol == '-'){
+                        if(startPos == 1 || "Symbol".equals(block.elementList.get(startPos-2).getClass().getSimpleName())){
+                            needFlips = true;
+                            ((Symbol)block.elementList.get(startPos-1)).needDel = true;
+                        }
+                    }
+                }
+            }
             // 创建准备插入的Block，并填充数据
             Block tempBlock = new Block();
+            tempBlock.needFlips = needFlips;
             for(int x=startPos+1; x<endPos; x++){
                 tempBlock.elementList.add(block.elementList.get(x));
+            }
+            // 如果需要对括号内内容取反，则需要删除该负号，将起始位置前移1位，会被下面安全删除删掉
+            if(needFlips){
+                startPos--;
             }
             // 安全删除列表中Block需要替换的部分
             Iterator<Element> iterator = block.elementList.iterator();
             // 位置标识
             int index = 0;
             while (iterator.hasNext()){
-                Element str = iterator.next();
+                Element element = iterator.next();
                 if(index >= startPos && index <= endPos){
                     iterator.remove();
                 }
