@@ -19,7 +19,7 @@ public class Block extends Element{
     }
 
     /**
-     * 构造方法
+     * 构造方法2
      */
     public Block(ArrayList<Element> elementList){
         this.elementList = elementList;
