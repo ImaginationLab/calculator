@@ -1,24 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+/*
+ * @Description  : 
+ * @Author       : ch1lam
+ * @Date         : 2021-12-26 16:20:54
+ * @LastEditTime : 2022-01-04 20:58:37
+ * @LastEditors  : chilam
+ * @FilePath     : \calculator\src\App.tsx
+ */
+import { Route, Routes } from "react-router-dom";
+import Lite from "./view/Lite";
+import Pro from "./view/Pro";
+import { CalculationsProvider } from "./context";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="flex justify-center items-center h-screen bg-stone-200">
+      <CalculationsProvider>
+        <Routes>
+          <Route path="/Lite" element={<Lite />}></Route>
+          <Route path="/Pro" element={<Pro />}></Route>
+          <Route path="*" element={<Lite />}></Route>
+        </Routes>
+      </CalculationsProvider>
     </div>
   );
 }
